@@ -1,9 +1,7 @@
-"""FrankenUI Music Example build with MonsterUI (Original design by ShadCN)"""
-
 from fasthtml.common import *
 from monsterui.all import *
- 
-def MusicLi(t,hk=''): return Li(A(DivFullySpaced(t,P(hk,cls=TextFont.muted_sm))))
+
+app, rt = fast_app(hdrs=Theme.slate.headers())
 
 music_items = [("About Music", ""   ),
                ("Preferences", "⌘"  ),
@@ -31,6 +29,18 @@ edit_actions = [("Undo",         "⌘Z"),
 
 view_dd_data = ["Show Playing Next", "Show Lyrics", "Show Status Bar", "Hide Sidebar", "Enter Full Screen"]
 
+listen_now_albums = (("Roar", "Catty Perry"), ("Feline on a Prayer", "Cat Jovi"),("Fur Elise", "Ludwig van Beethovpurr"),("Purrple Rain", "Prince's Cat"))
+
+made_for_you_albums = [("Like a Feline",         "Catdonna"),
+                       ("Livin' La Vida Purrda", "Ricky Catin"),
+                       ("Meow Meow Rocket",      "Elton Cat"),
+                       ("Rolling in the Purr",   "Catdelle"),
+                       ("Purrs of Silence",      "Cat Garfunkel"),
+                       ("Meow Me Maybe",         "Carly Rae Purrsen"),]
+
+def MusicLi(t,hk=''): return Li(A(DivFullySpaced(t,P(hk,cls=TextFont.muted_sm))))
+def MusicSidebarLi(icon, text): return Li(A(DivLAligned(UkIcon(icon), P(text))))
+
 music_headers = NavBarContainer(
             NavBarLSide(
                 NavBarNav(
@@ -48,21 +58,11 @@ music_headers = NavBarContainer(
                         NavHeaderLi("Switch Account"),
                         *map(MusicLi, ("Andy", "Benoit", "Luis", "Manage Family", "Add Account")))))))
 
-
 def Album(title,artist):
     img_url = 'https://ucarecdn.com/e5607eaf-2b2a-43b9-ada9-330824b6afd7/music1.webp'
     return Div(
         Div(cls="overflow-hidden rounded-md")(Img(cls="transition-transform duration-200 hover:scale-105", src=img_url)),
         Div(cls='space-y-1')(P(title,cls=TextT.bold),P(artist,cls=TextT.muted)))
-        
-listen_now_albums = (("Roar", "Catty Perry"), ("Feline on a Prayer", "Cat Jovi"),("Fur Elise", "Ludwig van Beethovpurr"),("Purrple Rain", "Prince's Cat"))
-
-made_for_you_albums = [("Like a Feline",         "Catdonna"),
-                       ("Livin' La Vida Purrda", "Ricky Catin"),
-                       ("Meow Meow Rocket",      "Elton Cat"),
-                       ("Rolling in the Purr",   "Catdelle"),
-                       ("Purrs of Silence",      "Cat Garfunkel"),
-                       ("Meow Me Maybe",         "Carly Rae Purrsen"),]
 
 music_content = (Div(H3("Listen Now"), cls="mt-6 space-y-1"),
                     P("Top picks for you. Updated daily.",cls=TextFont.muted_sm),
@@ -72,6 +72,17 @@ music_content = (Div(H3("Listen Now"), cls="mt-6 space-y-1"),
                     P("Your personal playlists. Updated daily.", cls=TextFont.muted_sm),
                     DividerLine(),
                     Grid(*[Album(t,a) for t,a in made_for_you_albums], cols_xl=6))
+
+discoved_data =  [("play-circle","Listen Now"), ("binoculars", "Browse"), ("rss","Radio")]
+library_data =   [("play-circle", "Playlists"), ("music", "Songs"), ("user", "Made for You"), ("users", "Artists"), ("bookmark", "Albums")]
+playlists_data = [("library","Recently Added"), ("library","Recently Played")]
+
+
+sidebar = NavContainer(
+    NavHeaderLi(H3("Discover")), *[MusicSidebarLi(*o) for o in discoved_data],
+    NavHeaderLi(H3("Library")),  *[MusicSidebarLi(*o) for o in library_data],
+    NavHeaderLi(H3("Playlists")),*[MusicSidebarLi(*o) for o in playlists_data],
+    cls=(NavT.primary,'space-y-3','pl-8'))
 
 tabs = TabContainer(
     Li(A('Music',    href='#'),    cls='uk-active'),
@@ -92,17 +103,7 @@ def podcast_tab():
                 P("You have not added any podcasts. Add one below.", cls=TextFont.muted_sm),
                 Button("Add Podcast", cls=ButtonT.primary))))
 
-discoved_data =  [("play-circle","Listen Now"), ("binoculars", "Browse"), ("rss","Radio")]
-library_data =   [("play-circle", "Playlists"), ("music", "Songs"), ("user", "Made for You"), ("users", "Artists"), ("bookmark", "Albums")]
-playlists_data = [("library","Recently Added"), ("library","Recently Played")]
-
-def MusicSidebarLi(icon, text): return Li(A(DivLAligned(UkIcon(icon), P(text))))
-sidebar = NavContainer(
-    NavHeaderLi(H3("Discover")), *[MusicSidebarLi(*o) for o in discoved_data],
-    NavHeaderLi(H3("Library")),  *[MusicSidebarLi(*o) for o in library_data],
-    NavHeaderLi(H3("Playlists")),*[MusicSidebarLi(*o) for o in playlists_data],
-    cls=(NavT.primary,'space-y-3','pl-8'))
-
+@rt('/')
 def page():
     return Div(Container(music_headers,cls='py-8'), DividerSplit(),
         Grid(sidebar,
@@ -116,4 +117,4 @@ def page():
                         Li(podcast_tab())))),
             cols=5))
 
-music_homepage = page()
+serve()
