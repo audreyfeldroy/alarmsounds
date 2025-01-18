@@ -53,12 +53,10 @@ def MusicLi(t,hk=''): return Li(A(DivFullySpaced(t,P(hk,cls=TextFont.muted_sm)))
 
 
 def Album(title,artist,scr):
-    img_url = 'https://ucarecdn.com/e5607eaf-2b2a-43b9-ada9-330824b6afd7/music1.webp'
     return Div(
         Div(
-            Img(
+            UkIcon('alarm-clock', height=150, width=150,
                 cls="transition-transform duration-200 hover:scale-105", 
-                src=img_url,
                 onmousedown=scr),
             cls="overflow-hidden rounded-md"),
         Div(cls='space-y-1')(P(title,cls=TextT.bold),P(artist,cls=TextT.muted)))
