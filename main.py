@@ -5,24 +5,24 @@ app, rt = fast_app(hdrs=(Theme.slate.headers(), Script(src="https://unpkg.com/to
 
 
 listen_now_albums = (
-    ("Tone.js Hello World", "Tone.js"),
-    ("Roar", "Catty Perry"), 
-    ("Feline on a Prayer", "Cat Jovi"),
-    ("Fur Elise", "Ludwig van Beethovpurr"),
-    ("Purrple Rain", "Prince's Cat")
+    ("Tone.js Hello World", "Tone.js","synth.triggerAttackRelease('C4', '8n');Tone.start();"),
+    ("Roar", "Catty Perry", "synth.triggerAttackRelease('D4', '8n');"), 
+    ("Feline on a Prayer", "Cat Jovi", "synth.triggerAttackRelease('E4', '8n');"),
+    ("Fur Elise", "Ludwig van Beethovpurr", "synth.triggerAttackRelease('F4', '8n');"),
+    ("Purrple Rain", "Prince's Cat", "synth.triggerAttackRelease('G4', '8n');")
 )
 
 def MusicLi(t,hk=''): return Li(A(DivFullySpaced(t,P(hk,cls=TextFont.muted_sm))))
 
 
-def Album(title,artist):
+def Album(title,artist,scr):
     img_url = 'https://ucarecdn.com/e5607eaf-2b2a-43b9-ada9-330824b6afd7/music1.webp'
     return Div(
         Div(
             Img(
                 cls="transition-transform duration-200 hover:scale-105", 
                 src=img_url,
-                onmousedown="synth.triggerAttackRelease('C4', '8n');Tone.start();"),
+                onmousedown=scr),
             cls="overflow-hidden rounded-md"),
         Div(cls='space-y-1')(P(title,cls=TextT.bold),P(artist,cls=TextT.muted)))
 
@@ -32,7 +32,7 @@ def MusicTab():
         Div(H3("Listen Now"), cls="mt-6 space-y-1"),
                     P("Top picks for you. Updated daily.",cls=TextFont.muted_sm),
                     DividerLine(),
-                    Grid(*[Album(t,a) for t,a in listen_now_albums], cls='gap-8'))
+                    Grid(*[Album(t,a,s) for t,a,s in listen_now_albums], cls='gap-8'))
 
 def podcast_tab():
     return Div(
