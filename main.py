@@ -1,10 +1,16 @@
 from fasthtml.common import *
 from monsterui.all import *
 
-app, rt = fast_app(hdrs=Theme.slate.headers())
+app, rt = fast_app(hdrs=(Theme.slate.headers(), Script(src="https://unpkg.com/tone")))
 
 
-listen_now_albums = (("Roar", "Catty Perry"), ("Feline on a Prayer", "Cat Jovi"),("Fur Elise", "Ludwig van Beethovpurr"),("Purrple Rain", "Prince's Cat"))
+listen_now_albums = (
+    ("Tone.js Hello World", "Tone.js"),
+    ("Roar", "Catty Perry"), 
+    ("Feline on a Prayer", "Cat Jovi"),
+    ("Fur Elise", "Ludwig van Beethovpurr"),
+    ("Purrple Rain", "Prince's Cat")
+)
 
 def MusicLi(t,hk=''): return Li(A(DivFullySpaced(t,P(hk,cls=TextFont.muted_sm))))
 
@@ -12,11 +18,18 @@ def MusicLi(t,hk=''): return Li(A(DivFullySpaced(t,P(hk,cls=TextFont.muted_sm)))
 def Album(title,artist):
     img_url = 'https://ucarecdn.com/e5607eaf-2b2a-43b9-ada9-330824b6afd7/music1.webp'
     return Div(
-        Div(cls="overflow-hidden rounded-md")(Img(cls="transition-transform duration-200 hover:scale-105", src=img_url)),
+        Div(
+            Img(
+                cls="transition-transform duration-200 hover:scale-105", 
+                src=img_url,
+                onmousedown="synth.triggerAttackRelease('C4', '8n');Tone.start();"),
+            cls="overflow-hidden rounded-md"),
         Div(cls='space-y-1')(P(title,cls=TextT.bold),P(artist,cls=TextT.muted)))
 
 def MusicTab():
-    return (Div(H3("Listen Now"), cls="mt-6 space-y-1"),
+    return (
+        Script('const synth = new Tone.Synth().toDestination();'),
+        Div(H3("Listen Now"), cls="mt-6 space-y-1"),
                     P("Top picks for you. Updated daily.",cls=TextFont.muted_sm),
                     DividerLine(),
                     Grid(*[Album(t,a) for t,a in listen_now_albums], cls='gap-8'))
